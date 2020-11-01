@@ -17,14 +17,13 @@ pipeline {
       }
       stage('Build') {
          steps {
-            sh 'echo No build required for fruit.'
+            sh 'echo No build required'
          }
       }
-
       stage('Build and Push Image') {
          steps {
-            withCredentials([string(credentialsId: 'docker-hub-cred', variable: 'docker')]) {
-               sh 'docker login -u andriansyahagung -p ${docker}'
+            withCredentials([string(credentialsId: 'docker-hub-cred', variable: 'docker-cred')]) {
+               sh 'docker login -u andriansyahagung -p ${docker-cred}'
                sh 'docker image build -t ${REPOSITORY_TAG} .'
                sh 'docker push ${REPOSITORY_TAG}'
             }
