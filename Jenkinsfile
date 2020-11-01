@@ -22,8 +22,8 @@ pipeline {
       }
       stage('Build and Push Image') {
          steps {
-            withCredentials([string(credentialsId: 'docker-hub-cred', variable: 'docker-cred')]) {
-               sh 'docker login -u andriansyahagung -p ${docker-cred}'
+            withCredentials([string(credentialsId: 'docker-hub-cred', variable: 'cred')]) {
+               sh 'docker login -u andriansyahagung -p ${cred}'
                sh 'docker image build -t ${REPOSITORY_TAG} .'
                sh 'docker push ${REPOSITORY_TAG}'
             }
