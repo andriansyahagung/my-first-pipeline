@@ -13,6 +13,7 @@ pipeline {
          steps {
             cleanWs()
             git credentialsId: 'github-repo', url: "https://github.com/andriansyahagung/my-first-pipeline.git"
+            sh 'git pull origin master'
          }
       }
       stage('Build') {
