@@ -20,7 +20,7 @@ pipeline {
             sh 'echo No build required'
          }
       }
-      stage('Build and Push Image') {
+      stage('Build Image and Push Image to DockerHUB') {
          steps {
             withCredentials([string(credentialsId: 'docker-hub-cred', variable: 'cred')]) {
                sh 'docker login -u andriansyahagung -p ${cred}'
@@ -30,12 +30,16 @@ pipeline {
 
          }
       }
-
-      stage('Deploy to Cluster') {
+      stage('Deploy to Kubernetes Cluster') {
           steps {
             withKubeConfig(caCertificate: '', clusterName: '', contextName: '', credentialsId: 'kube-local', namespace: 'dev', serverUrl: '') {
                sh 'envsubst < ${WORKSPACE}/deploy.yaml | kubectl apply -f -'
             }
+          }
+      }
+      stage('Deploy to ACI') {
+          steps {
+            sh 'ansible-playbook -i inventory.yaml create_aci_component.yaml'
           }
       }
    }
